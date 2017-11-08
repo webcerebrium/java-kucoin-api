@@ -19,7 +19,7 @@ public class KucoinSymbol {
             !symbol.endsWith("-NEO") &&
             !symbol.endsWith("-ETH") &&
             !symbol.endsWith("-USDT")) {
-            throw new KucoinApiException("Market Symbol should be ending with -BTC, -ETH, -RPX or -USDT. Example: RPX-BTC");
+            throw new KucoinApiException("Market Symbol should be ending with -BTC, -ETH, -NEO or -USDT. Example: RPX-BTC");
         }
         this.symbol = symbol.toUpperCase();
     }

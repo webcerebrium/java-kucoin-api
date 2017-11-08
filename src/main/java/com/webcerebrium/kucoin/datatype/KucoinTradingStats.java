@@ -5,10 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.webcerebrium.kucoin.api.KucoinApiException;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class KucoinTradingStats {
 
@@ -16,7 +16,7 @@ public class KucoinTradingStats {
 
     public KucoinTradingStats(JsonObject response) throws KucoinApiException {
         if (!response.has("data")) {
-            throw new KucoinApiException("Missing data in response object while trying to read order book");
+            throw new KucoinApiException("Missing data in response object while trying to read trading stats");
         }
         JsonArray data = response.get("data").getAsJsonArray();
         listTradingSymbols.clear();
@@ -40,7 +40,7 @@ public class KucoinTradingStats {
 
     public Set<KucoinSymbol> getSymbolsOf(String coin) throws KucoinApiException {
         List<KucoinTradingSymbol> coins = getMarketsOf(coin);
-        Set<KucoinSymbol> result = new HashSet<>();
+        Set<KucoinSymbol> result = new TreeSet<>();
         for (KucoinTradingSymbol sym: coins) {
             result.add(sym.getSymbol());
         }
@@ -49,7 +49,7 @@ public class KucoinTradingStats {
 
     public Set<String> getCoinsOf(String coin) throws KucoinApiException {
         List<KucoinTradingSymbol> coins = getMarketsOf(coin);
-        Set<String> result = new HashSet<>();
+        Set<String> result = new TreeSet<>();
         for (KucoinTradingSymbol sym: coins) {
             result.add(sym.getSymbol().getOpposite(coin));
         }

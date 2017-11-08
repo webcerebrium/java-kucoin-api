@@ -13,6 +13,7 @@ package com.webcerebrium.kucoin.api;
  */
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 import com.google.gson.JsonArray;
@@ -26,12 +27,15 @@ import com.webcerebrium.kucoin.datatype.KucoinTradingStats;
 import com.webcerebrium.kucoin.datatype.KucoinUserInfo;
 import com.webcerebrium.kucoin.datatype.KucoinWallet;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Data
+@Slf4j
 public class KucoinApi {
 
     /* Actual API key and Secret Key that will be used */
@@ -68,7 +72,7 @@ public class KucoinApi {
      * Constructor of API - keys are loaded from VM options, environment variables, resource files
      * @throws KucoinApiException in case of any error
      */
-    public KucoinApi() throws KucoinApiException {
+    public KucoinApi() {
         this.apiKey = config.getVariable("KUCOIN_API_KEY");
         this.secretKey = config.getVariable("KUCOIN_SECRET");
     }
@@ -122,6 +126,17 @@ public class KucoinApi {
     // ======= ======= ======= ======= ======= =======
     // MARKET INFORMATION
     // ======= ======= ======= ======= ======= =======
+    public Set<String> getCoinsOf(String coin) {
+        try {
+            KucoinTradingStats stats = this.getTradingStats();
+            return stats.getCoinsOf(coin.toUpperCase());
+        } catch (Exception e) {
+            log.error("KUCOIN UNCAUGHT EXCEPTION {}", e.getMessage());
+        } catch (KucoinApiException e) {
+            log.warn("KUCOIN ERROR {}", e.getMessage());
+        }
+        return ImmutableSet.of();
+    }
 
     /**
      * Getting information about rates of converting main coins (currently it is just BTC) into currencies
