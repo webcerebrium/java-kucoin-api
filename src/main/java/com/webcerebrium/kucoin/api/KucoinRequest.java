@@ -36,7 +36,7 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -249,7 +249,10 @@ public class KucoinRequest {
         String endpoint = this.url.getPath();
         String signature = null;
         String queryString = this.url.getQuery() != null ?  this.url.getQuery() : "";
-        String nonce = String.valueOf(new Date().getTime());
+
+        Calendar time = Calendar.getInstance();
+        time.add(Calendar.MILLISECOND, -time.getTimeZone().getOffset(time.getTimeInMillis()));
+        String nonce = String.valueOf(time.getTimeInMillis());
 
         try {
             String strForSign = endpoint + "/" + nonce +"/" + queryString;
